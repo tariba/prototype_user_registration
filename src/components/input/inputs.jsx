@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import axios from "axios";
 
 const Inputs = () => {
   const [formData, setFormData] = useState({
@@ -17,21 +18,7 @@ const Inputs = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-  
-      await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: user.uid,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          address: formData.address,
-          school: formData.school,
-        }),
-      });
+    try { await axios.post("http://localhost:3001/users/", formData)
       alert("Registration successful!");
     } catch (error) {
       console.error("Error:", error);
