@@ -2,19 +2,34 @@ import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import axios from "axios";
 import firebase from "../../../firebase/firebase.js"
-import { app } from "../../../firebase/firebase.js";
-import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import  {auth} from "../../../firebase/firebase.js"
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+
+import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { useIdToken } from 'react-firebase-hooks/auth';
+
 
 const Inputs = () => {
   // const auth = getAuth(app);
-  const [user, loading, error] = useAuthState(firebase.auth());
-  const email = useRef();
-  const password = useRef();
-  const firstName = useRef();
-  const lastName = useRef();
-  const address = useRef();
-  const school = useRef();
+  // const [user, loading, error] = useAuthState(auth());
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
+  const [
+    createUserWithEmailAndPassword,
+    user,
+    loading,
+    error,
+  ] = useCreateUserWithEmailAndPassword(auth);
+
+  
+  // const [user, loading, error] = useIdToken(auth);
+  // const email = useRef();
+  // const password = useRef();
+  // const firstName = useRef();
+  // const lastName = useRef();
+  // const address = useRef();
+  // const school = useRef();
 
   useEffect(() => {});
 
@@ -37,9 +52,7 @@ const Inputs = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const {user} = await firebase
-      .auth()
-      .createUserWithEmailAndPassword(formData.email, formData.password)
+      createUserWithEmailAndPassword(formData.email, formData.password)
       await axios.post("http://localhost:3001/users/", formData);
       alert("Registration successful!");
     } catch (error) {
@@ -61,7 +74,7 @@ const Inputs = () => {
           paddingBottom: "5px",
         }}
       >
-        <div ref={email} className="mt-10 col-span-2">
+        <div  className="mt-10 col-span-2">
           <label htmlFor="email">Email:</label>
           <input
             type="email"
@@ -73,7 +86,7 @@ const Inputs = () => {
           />
         </div>
 
-        <label className="mb-20" ref={password} htmlFor="password">
+        <label className="mb-20"  htmlFor="password">
           Password:
         </label>
         <input
@@ -85,7 +98,7 @@ const Inputs = () => {
           required
         />
 
-        <label ref={firstName} htmlFor="firstName">
+        <label  htmlFor="firstName">
           First Name:
         </label>
         <input
@@ -97,7 +110,7 @@ const Inputs = () => {
           required
         />
 
-        <label ref={lastName} htmlFor="lastName">
+        <label  htmlFor="lastName">
           Last Name:
         </label>
         <input
@@ -109,7 +122,7 @@ const Inputs = () => {
           required
         />
 
-        <label ref={address} htmlFor="address">
+        <label htmlFor="address">
           Address:
         </label>
         <input
@@ -121,7 +134,7 @@ const Inputs = () => {
           required
         />
 
-        <label ref={school} htmlFor="school">
+        <label  htmlFor="school">
           School Name:
         </label>
         <input
