@@ -1,8 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import axios from "axios";
+import firebase from "../../../firebase/firebase.js"
+import { app } from "../../../firebase/firebase.js";
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const Inputs = () => {
+  // const auth = getAuth(app);
+  const [user, loading, error] = useAuthState(firebase.auth());
   const email = useRef();
   const password = useRef();
   const firstName = useRef();
@@ -31,6 +37,9 @@ const Inputs = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const {user} = await firebase
+      .auth()
+      .createUserWithEmailAndPassword(formData.email, formData.password)
       await axios.post("http://localhost:3001/users/", formData);
       alert("Registration successful!");
     } catch (error) {
