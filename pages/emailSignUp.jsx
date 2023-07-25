@@ -1,21 +1,25 @@
 import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
 import React, { useRef, useState } from "react";
+import { app } from "../firebase/firebase";
+import { auth } from "../firebase/firebase.js";
+import { useUpdateProfile } from "react-firebase-hooks/auth";
 
 const EmailSignUp = () => {
   const emailInput = useRef();
-  const auth = getAuth();
+  // const auth = getAuth(app);
+
   const actionCodeSettings = {
     url: "http://localhost:3000/",
     handleCodeInApp: true,
-    iOS: {
-      bundleID: "",
-    },
-    android: {
-      packageName: "",
-      installApp: true,
-      minimumVersion: 12,
-    },
-    dynamicLinkDomain: "",
+    // iOS: {
+    //   bundleID: "",
+    // },
+    // android: {
+    //   packageName: "",
+    //   installApp: true,
+    //   minimumVersion: 12,
+    // },
+    // dynamicLinkDomain: "",
   };
 
   const [emailData, setEmailData] = useState({
@@ -31,9 +35,11 @@ const EmailSignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      sendSignInLinkToEmail(auth, email, actionCodeSettings).then(() => {
-        window.localStorage.setItem("emailForSignIn", email);
-      });
+      sendSignInLinkToEmail(auth, emailData.email, actionCodeSettings).then(
+        () => {
+          window.localStorage.setItem("emailForSignIn", emailData.email);
+        }
+      );
     } catch (error) {
       console.log("Error:", error);
       alert("Error occured!! check the console");
@@ -66,7 +72,6 @@ const EmailSignUp = () => {
           />
         </div>
         <button className="bg-purple-700" type="submit" onSubmit={handleSubmit}>
-          {" "}
           Sign UP
         </button>
       </form>
