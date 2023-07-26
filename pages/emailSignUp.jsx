@@ -1,25 +1,32 @@
-import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
-import React, { useRef, useState } from "react";
-import { app } from "../firebase/firebase";
-import { auth } from "../firebase/firebase.js";
-import { useUpdateProfile } from "react-firebase-hooks/auth";
-
+'use client'
+import firebase from 'firebase/app';
+import 'firebase/auth'
+import { useState } from "react";
+import { auth, app } from "../firebase/firebase.js"
+import { sendSignInLinkToEmail } from "firebase/auth"
 const EmailSignUp = () => {
-  const emailInput = useRef();
-  // const auth = getAuth(app);
-
-  const actionCodeSettings = {
-    url: "http://localhost:3000/",
-    handleCodeInApp: true,
-    // iOS: {
-    //   bundleID: "",
-    // },
-    // android: {
-    //   packageName: "",
-    //   installApp: true,
-    //   minimumVersion: 12,
-    // },
-    // dynamicLinkDomain: "",
+  
+  const sendEmailLink = async (e) => {
+    e.preventDefault()
+    const actionCodeSettings = {
+      url: 'http://localhost:3000/inputs',
+      handleCodeInApp: true,
+      iOSBundleId: 'com.example.ios',
+      androidPackageName: 'com.example.android',
+      androidInstallApp: true,
+      androidMinimumVersion: '12',
+    };
+  
+    try {
+      const email = emailData.email
+      console.log(email)
+      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+      alert('email sent')
+      // Email sent successfully
+    } catch (error) {
+      // Handle errors here
+      console.error('Error sending email link:', error);
+    }
   };
 
   const [emailData, setEmailData] = useState({
@@ -30,26 +37,12 @@ const EmailSignUp = () => {
       ...prevData,
       [e.target.name]: e.target.value,
     }));
+    console.log(emailData);
   };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      sendSignInLinkToEmail(auth, emailData.email, actionCodeSettings).then(
-        () => {
-          window.localStorage.setItem("emailForSignIn", emailData.email);
-        }
-      );
-    } catch (error) {
-      console.log("Error:", error);
-      alert("Error occured!! check the console");
-    }
-  };
-
   return (
     <div className="bg-gray-700 w-screen h-screen flex justify-center items-center  ">
       <form
-        onSubmit={handleSubmit}
+        // onSubmit={handleSubmit}
         className="text-black bg-green-500 rounded-lg p-8 sm:mx-5 md:mx-20 lg:ml-20 lg:mr-20 shadow-2xl"
         style={{
           height: "90vh",
@@ -63,7 +56,7 @@ const EmailSignUp = () => {
           Email
           <input
             className="text-black"
-            ref={emailInput}
+            // ref={emailInput}
             type="email"
             name="email"
             value={emailData.email}
@@ -71,12 +64,11 @@ const EmailSignUp = () => {
             required
           />
         </div>
-        <button className="bg-purple-700" type="submit" onSubmit={handleSubmit}>
-          Sign UP
-        </button>
+        <div className="mt-10">
+          <button onClick={sendEmailLink} className="bg-blue-700 w-64 h-12 text-white">Sign UP</button>
+        </div>
       </form>
     </div>
   );
 };
-
-export default EmailSignUp;
+export default EmailSignUp

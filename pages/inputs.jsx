@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import axios from "axios";
-import firebase from "../../../firebase/firebase.js";
+import firebase from "../firebase/firebase.js";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase/firebase.js";
+import { auth } from "../firebase/firebase.js";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
@@ -49,6 +49,7 @@ const Inputs = () => {
       createUserWithEmailAndPassword(formData.email, formData.password);
       await axios.post("http://localhost:3001/users/", formData);
       alert("Registration successful!");
+      
     } catch (error) {
       console.error("Error:", error);
       alert("Error occurred. Please try again later.");

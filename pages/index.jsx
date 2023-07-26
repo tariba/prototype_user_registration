@@ -1,4 +1,4 @@
-import Inputs from "@/components/input/inputs";
+import Inputs from "./inputs";
 import EmailSignUp from "./emailSignUp";
 
 export default function Home() {
